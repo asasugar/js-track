@@ -30,7 +30,9 @@ class Socket {
 		if (!wsDomain) {
 			throw new Error('domain is empty');
 		}
-		this.socketTask = uiClient.connectSocket(wsDomain);
+		this.socketTask = uiClient.connectSocket(wsDomain) as
+			| UniApp.SocketTask
+			| WechatMiniprogram.SocketTask;
 	}
 
 	/**

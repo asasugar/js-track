@@ -6,6 +6,8 @@ declare namespace JTBusiness {
 	type SdkType = 'android' | 'ios' | 'weixinmini' | 'web' | 'alipaymini' | 'tiktokmini';
 
 	interface SdkBaseConfigOptions extends AnyObject {
+		domain?: string;
+		wsDomain?: string;
 		client: Client;
 		apiEnv: Env;
 		appName: string;
@@ -86,14 +88,5 @@ declare namespace JTBusiness {
 		trackType: string;
 		eventTime?: number;
 		properties?: AnyObject;
-	}
-
-	interface BaseInfo {
-		encryptionKey: string;
-		appKey: string;
-		appName?: string;
-		sdkType?: SdkType;
-		domain?: string;
-		wsDomain?: string;
 	}
 }

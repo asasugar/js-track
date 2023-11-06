@@ -11,7 +11,7 @@
  * 7.自动埋点开关
  *  配置中心接口
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
- * @Date: 2022-11-21 16:03:48
+ * @Date: 2023-11-06 16:03:48
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
  * @LastEditTime: 2022-11-22 17:13:40
  */
@@ -28,7 +28,6 @@ class UNIPageCollect extends PageCollect {
 	 */
 	autoCollect(event: IEvent, instance: any) {
 		if (!event) return;
-		// logger.info('【LUNIKTRACK!!! collect start】', event, instance);
 
 		const viewId = this.getViewId(event);
 
