@@ -1,0 +1,58 @@
+{
+  "name": "js-track",
+  "version": "1.0.0",
+  "author": "Xiongjie.Xue",
+  "homepage": "https://github.com/asasugar/js-track#readme",
+  "bugs": {
+    "url": "https://github.com/asasugar/js-track/issues"
+  },
+  "type": "module",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky install",
+    "build:platform-api": "pnpm run -C packages/js-track-platform-api build",
+    "build:shared": "pnpm run -C packages/js-track-shared build",
+    "build:sdk": "pnpm run -C packages/js-track-sdk build",
+    "build:p-auto": "pnpm run -C plugins/vite-plugin-auto-track build",
+    "build:docs": "pnpm run -C docs/js-track-doc build",
+    "build:plugins": "pnpm build:p-auto",
+    "build": "gulp -f ./scripts/gulpfile.js",
+    "lint": "eslint . --fix --ext .js,.ts",
+    "lint-staged": "lint-staged",
+    "main:log": "standard-version",
+    "c:add": "pnpm changeset add",
+    "c:version": "pnpm changeset version",
+    "publish:all": "pnpm publish -r --tag next"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.19.0",
+    "standard-version": "^9.5.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0",
+    "@js-track/eslint-config": "workspace:^",
+    "@js-track/shared": "workspace:^",
+    "@types/node": "^18.18.7",
+    "gulp": "^4.0.2",
+    "typescript": "^4.9.5"
+  },
+  "packageManager": "pnpm@6.30.0",
+  "pnpm": {
+    "overrides": {
+      "js-track": "workspace:*"
+    }
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=6"
+  },
+  "workspaces": [
+    "./packages/*",
+    "./plugins/*"
+  ]
+}

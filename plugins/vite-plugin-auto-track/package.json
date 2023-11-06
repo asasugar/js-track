@@ -1,0 +1,24 @@
+{
+  "name": "@js-track/vite-plugin-auto-track",
+  "version": "1.0.2",
+  "description": "For UniApp Vue3 auto collect track by Vite!",
+  "keywords": [
+    "vite-plugin",
+    "uni-app vue3",
+    "auto-track"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "pnpm clean && tsup"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5",
+    "tsup": "^7.2.0",
+    "vite": "^3.2.7"
+  }
+}
