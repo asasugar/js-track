@@ -3,13 +3,13 @@
 layout: home
 
 hero:
-  name: "JS-TRACK CORE"
-  text: "前端小程序埋点工具链"
+  name: "js-track"
+  text: "小程序埋点工具链"
   tagline: 为埋点提供低成本接入方案
   actions:
     - theme: brand
       text: 开始
-      link: /markdown-examples
+      link: /guide/index
     - theme: alt
       text: API 示例
       link: /api-examples

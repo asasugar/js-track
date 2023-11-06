@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-	title: 'JS-TRACK CORE',
+	title: 'js-track',
 	description: '小程序埋点工具链',
 	lang: 'zh-CN',
 	base: '/js-track/',
@@ -10,7 +10,7 @@ export default defineConfig({
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
-			{ text: '指引', link: '/' },
+			{ text: '指引', link: '/guide/why' },
 			{ text: 'Examples', link: '/markdown-examples' }
 		],
 
@@ -34,6 +34,6 @@ export default defineConfig({
 				]
 			}
 		],
-		socialLinks: [{ icon: 'github', link: 'https://github.com/vuejs/vitepress' }]
+		socialLinks: [{ icon: 'github', link: 'https://github.com/asasugar/js-track' }]
 	}
 });
