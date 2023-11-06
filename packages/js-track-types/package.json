@@ -16,8 +16,10 @@
   "license": "ISC",
   "dependencies": {
     "@dcloudio/types": "^3.4.1",
-    "@js-track/tsconfig": "workspace:^",
     "@types/node": "^18.18.7",
     "miniprogram-api-typings": "^3.12.1"
+  },
+  "devDependencies": {
+    "@js-track/tsconfig": "workspace:^"
   }
 }

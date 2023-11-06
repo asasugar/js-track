@@ -172,15 +172,16 @@ importers:
       '@dcloudio/types':
         specifier: ^3.4.1
         version: 3.4.3
-      '@js-track/tsconfig':
-        specifier: workspace:^
-        version: link:../js-track-ts-config
       '@types/node':
         specifier: ^18.18.7
         version: 18.18.8
       miniprogram-api-typings:
         specifier: ^3.12.1
         version: 3.12.1
+    devDependencies:
+      '@js-track/tsconfig':
+        specifier: workspace:^
+        version: link:../js-track-ts-config
 
   plugins/vite-plugin-auto-track:
     devDependencies:
