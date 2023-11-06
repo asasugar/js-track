@@ -4,3 +4,5 @@ packages:
   - 'packages/*'
   # all plugins in direct subdirs of plugins/
   - 'plugins/*'
+  # all docs in direct subdirs of docs/
+  - 'docs/*'
