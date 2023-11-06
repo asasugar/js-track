@@ -1,6 +1,6 @@
 {
   "name": "@js-track/vite-plugin-auto-track",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "For UniApp Vue3 auto collect track by Vite!",
   "keywords": [
     "vite-plugin",
