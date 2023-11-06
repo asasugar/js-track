@@ -7,7 +7,7 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-11-06 14:33:22
+ * @LastEditTime: 2023-11-06 15:18:07
  */
 
 import { CACHE_TO_STORAGE_JS_TRACK, STORAGE_UPLOAD_ERROR_JS_TRACK } from '@/constant/localKey';
@@ -88,10 +88,8 @@ export class UploadLocal extends EventSub {
 	 * 将数据从cache保存到local
 	 */
 	startLocalTimer() {
-		// logger.info('JSTRACKSDK CACHE TO LOCAL TIMER START!!!');
 		if (!this.saveTimer && !this.stopFlag) {
 			this.saveTimer = setTimeout(async () => {
-				// logger.info('JSTRACKSDK CACHE TO LOCAL!!!');
 				await this.saveCacheToCache();
 				this.saveTimer = null;
 				this.startLocalTimer();

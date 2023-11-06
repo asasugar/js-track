@@ -7,7 +7,7 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-11-06 14:27:32
+ * @LastEditTime: 2023-11-06 15:17:41
  */
 import collectService from '@/collect/event';
 import Config from '@/config';
@@ -70,11 +70,9 @@ export class Upload {
 	 * 定时器
 	 */
 	startTimer() {
-		// logger.info('JSTRACKSDK UPLOADER TIMER START');
 		if (!this.uploadTimer) {
 			this.uploadTimer = setTimeout(() => {
 				try {
-					// logger.info('JSTRACKSDK UPLOADER');
 					this.uploadTimerHandle();
 				} catch (err) {
 					logger.info('uploadTimerError', err);
@@ -172,7 +170,6 @@ export class Upload {
 		let res;
 		try {
 			res = await requestService.insert(params, header);
-			// logger.info('JSTRACKSDK REALTIME UPLOAD SUCCESS', res);
 		} catch (e) {
 			// 进入临时缓存
 			localService.save(dataStr);
@@ -223,26 +220,24 @@ export class Upload {
 			let res;
 			try {
 				res = await requestService.batchInsert(params, header);
-				const { code, msg } = (res && (res as any).data) || {};
+				const { code } = (res as any)?.data || {};
 				if (code === 1) {
 					// 上传成功后，清空storage
 					localService.clearUploadErrorToLocal(index);
-					// logger.info('JSTRACKSDK UPLOAD SUCCESS', msg, res);
 				} else {
-					logger.error('JSTRACKSDK UPLOAD FAIL', msg || (res && (res as any).errMsg), res);
 					// 上传失败后，回写storage
 					localService.resetUploadErrorToLocal(JSON.stringify(jsonArray), index);
 				}
 			} catch (err) {
 				// todo 上传失败后，回写storage
-				logger.error('JSTRACKSDK UPLOAD FAIL', JSON.stringify(err));
+				logger.error('js-track UPLOAD FAIL', JSON.stringify(err));
 				// 上传失败后，回写storage
 				localService.resetUploadErrorToLocal(JSON.stringify(jsonArray), index);
 				res = null;
 			}
 		} catch (err) {
 			// todo 缓存错误
-			logger.error('JSTRACKSDK UPLOAD FAIL', JSON.stringify(err));
+			logger.error('js-track UPLOAD FAIL', JSON.stringify(err));
 			// 上传失败后，回写storage
 			localService.resetUploadErrorToLocal(JSON.stringify(jsonArray), index);
 		} finally {

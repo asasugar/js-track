@@ -3,7 +3,7 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-11-06 11:28:38
+ * @LastEditTime: 2023-11-06 15:16:20
  */
 import Config from '@/config';
 import logger from '@/foundation/logger';
@@ -47,7 +47,7 @@ export class CollectEvent {
 			properties
 		});
 		uploadService.save(msg);
-		logger.info(['JSTRACKSDK SAVE!!!', msg.event_code, msg]);
+		logger.info(['js-track SAVE!!!', msg.event_code, msg]);
 	}
 
 	/**
@@ -66,7 +66,7 @@ export class CollectEvent {
 			properties
 		});
 		uploadService.send(msg);
-		logger.info(['JSTRACKSDK REAL TIME!!!', msg.event_code, msg]);
+		logger.info(['js-track REAL TIME!!!', msg.event_code, msg]);
 	}
 }
 

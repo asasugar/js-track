@@ -1,0 +1,16 @@
+{
+  "name": "js-track-doc",
+  "version": "1.0.0",
+  "description": "js-track doc",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vitepress": "1.0.0-rc.24"
+  }
+}
