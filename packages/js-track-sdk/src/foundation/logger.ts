@@ -2,110 +2,18 @@
  * 日志管理
  * 1.默认level4【time】
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
- * @Date: 2023-08-22 16:48:50
+ * @Date: 2022-12-07 09:55:58
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-09-08 18:11:28
+ * @LastEditTime: 2023-11-06 14:06:13
  */
-import { isFunction } from '@js-track/utils/is';
+import { Logger } from '@js-track/shared/utils';
 
-/**
- * 日志管理
- *  等级管理
- *  关闭日志
- *  默认console
- */
+const logger = new Logger();
 
-/**
- * 默认日志处理
- */
-function defaultHandler() {
-  return (...args: any[]) => {
-    if (console) {
-      console.log(...args);
-    }
-  };
-}
+logger.setHandlerAction((...args: any[]) => {
+	if (console) {
+		console.log('monitor', new Date().toString(), ...args);
+	}
+});
 
-/**
- * 日志等级对象
- */
-export const LOGGER_LEVEL = {
-  track: 1,
-  debug: 2,
-  info: 3,
-  time: 4,
-  warn: 5,
-  error: 6,
-  off: 99,
-};
-
-export class Logger {
-  handler: Function;
-  level: number;
-  constructor() {
-    this.level = LOGGER_LEVEL.track;
-    this.handler = defaultHandler();
-  }
-
-  /**
-   * 设置日志等级
-   * @param {*} level
-   */
-  setLevelAction(level: number) {
-    this.level = level || LOGGER_LEVEL.track;
-    return this;
-  }
-
-  /**
-   * 设置日志处理方法
-   * @param {*} handler
-   */
-  setHandlerAction(handler: Function) {
-    if (isFunction(handler)) {
-      this.handler = handler;
-    }
-  }
-
-  /**
-   * 关闭日志
-   */
-  offAction() {
-    this.level = LOGGER_LEVEL.off;
-  }
-
-  trace(...args: any[]) {
-    this.invoke(LOGGER_LEVEL.track, ...args);
-  }
-
-  debug(...args: any[]) {
-    this.invoke(LOGGER_LEVEL.debug, ...args);
-  }
-
-  info(...args: any[]) {
-    this.invoke(LOGGER_LEVEL.info, ...args);
-  }
-
-  warn(...args: any[]) {
-    this.invoke(LOGGER_LEVEL.warn, ...args);
-  }
-
-  error(...args: any[]) {
-    this.invoke(LOGGER_LEVEL.error, ...args);
-  }
-
-  time(...args: any[]) {
-    this.invoke(LOGGER_LEVEL.time, ...args);
-  }
-
-  enabledFor(level: number) {
-    return level >= this.level;
-  }
-
-  invoke(level: number, ...args: any[]) {
-    if (this.handler && this.enabledFor(level)) {
-      this.handler(...args);
-    }
-  }
-}
-
-export default new Logger();
+export default logger;

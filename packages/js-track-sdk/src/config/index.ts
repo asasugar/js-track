@@ -3,16 +3,15 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-09-08 17:50:01
+ * @LastEditTime: 2023-11-06 14:02:10
  */
 
-// import uiclient from '@js-track/uiclient';
-// import { isFunction } from '@js-track/utils/is';
-import type { SdkBaseConfigOptions } from '#/global';
+import uiClient from '@js-track/platform-api';
 
-const DEFAULT: SdkBaseConfigOptions = {
+const DEFAULT: JTBusiness.SdkBaseConfigOptions = {
+	client: 'uni',
 	domain: `https://xxx.xxx.xxx`,
-	lifecycleIdFormat:'xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxx',
+	lifecycleIdFormat: 'xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxx',
 	/**
 	 * 接口环境
 	 */
@@ -53,11 +52,16 @@ const DEFAULT: SdkBaseConfigOptions = {
 	// 数据加密密钥
 	encryptionKey: '',
 	// 需要扩展的附加属性
-	extendsPropertyKeys: []
+	extendsPropertyKeys: [],
+
+	clientType: '',
+	sdkType: 'android',
+	sdkVersion: '',
+	sessionidUuidFormat: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 };
 
 class SDKConfig {
-	config: SdkBaseConfigOptions;
+	config: JTBusiness.SdkBaseConfigOptions;
 	eventType = {
 		ACTION: '1', // 用户行为触发事件(action)
 		AUTO: '2', // APP自动触发（auto)
@@ -72,7 +76,7 @@ class SDKConfig {
 		};
 	}
 
-	init(config?: SdkBaseConfigOptions): SdkBaseConfigOptions {
+	init(config?: JTBusiness.SdkBaseConfigOptions): JTBusiness.SdkBaseConfigOptions {
 		this.config = {
 			...DEFAULT,
 			...config
@@ -83,16 +87,16 @@ class SDKConfig {
 	/**
 	 * 初始化系统信息
 	 */
-	// async initSystem() {
-	//   const systemInfo = uiclient.getSystemInfo();
-	//   if (systemInfo) {
-	//     this.config.systemInfo = systemInfo;
-	//   }
-	//   const networkType = await uiclient.getNetworkType();
-	//   if (networkType) {
-	//     this.config.networkType = networkType;
-	//   }
-	// }
+	async initSystem() {
+		const systemInfo = uiClient.getSystemInfo();
+		if (systemInfo) {
+			this.config.systemInfo = systemInfo;
+		}
+		const networkType = await uiClient.getNetworkType();
+		if (networkType) {
+			this.config.networkType = networkType;
+		}
+	}
 
 	/**
 	 * 获取config对象属性【深层属性】
@@ -102,7 +106,7 @@ class SDKConfig {
 		const types: string[] = type.split('.');
 		let attr;
 		types.forEach(item => {
-			this.config && (attr = this.config[item as keyof SdkBaseConfigOptions]);
+			this.config && (attr = this.config[item as keyof JTBusiness.SdkBaseConfigOptions]);
 		});
 		return attr;
 	}

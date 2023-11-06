@@ -1,10 +1,10 @@
 <h1 align="center">@js-track/types</h1>
 
-lunik-track埋点库ts声明
+js-track埋点库ts声明
 
 ## Contents
 
-- business.d.ts 业务声明LTBusiness
+- business.d.ts 业务声明JTBusiness
 - dcloudio-extends.d.ts 扩展uni-app声明
 - wechat-extends.d.ts 扩展微信原生声明
 - global.d.ts 全局声明扩展

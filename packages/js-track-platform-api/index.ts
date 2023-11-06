@@ -212,7 +212,7 @@ export class UIClient {
 		this.client?.onAppHide(fn);
 	}
 
-	connectSocket(url: string): WechatMiniprogram.SocketTask | Promise<any> {
+	connectSocket(url: string): WechatMiniprogram.SocketTask | UniApp.SocketTask {
 		return this.client?.connectSocket({
 			url,
 			complete: () => ({})

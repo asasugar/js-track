@@ -1,4 +1,4 @@
-import * as localKey from './localKey';
 import * as eventKey from './eventKey';
+import * as localKey from './localKey';
 
-export { localKey, eventKey };
+export { eventKey, localKey };

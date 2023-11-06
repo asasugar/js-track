@@ -5,13 +5,13 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-09-08 18:29:24
+ * @LastEditTime: 2023-11-06 14:36:29
  */
 
-import Config from '@js-track/config';
-import logger from '@js-track/foundation/logger';
-import asyncUni from '@js-track/uiclient';
-import { isFunction } from '@js-track/utils/is';
+import Config from '@/config';
+import logger from '@/foundation/logger';
+import uiClient from '@js-track/platform-api';
+import { isFunction } from '@js-track/shared/utils';
 import type { UploadParams } from '../typing';
 
 export class RequestCore {
@@ -19,14 +19,17 @@ export class RequestCore {
 	 * 系统request
 	 * @param {Object} config
 	 */
-	async mini(config:any) {
-		if (!asyncUni.request || !isFunction(asyncUni.request)) {
+	async mini(
+		config:
+			| UniApp.RequestOptions
+			| WechatMiniprogram.RequestOption<string | WechatMiniprogram.IAnyObject | ArrayBuffer>
+	) {
+		if (!uiClient.request || !isFunction(uiClient.request)) {
 			throw new Error('uiclient.request is empty');
 		}
 		if (!config || !config.url) {
 			throw new Error('config or config.url is empty');
 		}
-		// const { url, method = 'POST', data, headers, dataType } = config;
 		const { url, method = 'POST', data, dataType } = config;
 		let { header } = config;
 
@@ -35,7 +38,7 @@ export class RequestCore {
 			...header
 		};
 		try {
-			const response = await asyncUni.request({
+			const response = await uiClient.request({
 				url,
 				method,
 				data,
@@ -59,8 +62,6 @@ export class RequestCore {
 	 * @param {Object} headers
 	 */
 	async insert(data: UploadParams, header: AnyObject) {
-		const { apiEnv } = Config.config;
-		if (apiEnv === 'test04') return;
 		const { domain } = Config.config;
 
 		if (!domain) {
@@ -83,10 +84,6 @@ export class RequestCore {
 	 * @param {Object} headers
 	 */
 	async batchInsert(data: UploadParams, header: AnyObject) {
-		const { apiEnv } = Config.config;
-		if (apiEnv === 'test04') {
-			return;
-		}
 		const { domain } = Config.config;
 
 		if (!domain) {

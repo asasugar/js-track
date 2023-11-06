@@ -3,13 +3,12 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-09-07 11:40:57
+ * @LastEditTime: 2023-11-06 11:28:38
  */
-import type { EventOptions, TrackParmas } from '#/global';
-import Config from '@js-track/config';
-import logger from '@js-track/foundation/logger';
-import { BaseMessage } from '@js-track/message';
-import uploadService from '@js-track/upload';
+import Config from '@/config';
+import logger from '@/foundation/logger';
+import { BaseMessage } from '@/message';
+import uploadService from '@/upload';
 
 export class CollectEvent {
 	/**
@@ -20,7 +19,7 @@ export class CollectEvent {
 	 *  trackType 埋点类型【1自动、2手动】
 	 *  data
 	 */
-	#messageGenerator(params: EventOptions): TrackParmas {
+	#messageGenerator(params: JTBusiness.EventOptions): JTBusiness.MonitorParmas {
 		const { eventCode, eventType, trackType, properties } = params || {};
 		const msg = BaseMessage.init();
 		msg.event_code = eventCode;
@@ -39,7 +38,7 @@ export class CollectEvent {
 		eventCode: string,
 		properties: AnyObject = {},
 		eventType: string = Config.eventType.ACTION,
-		trackType: string = '2'
+		trackType = '2'
 	) {
 		const msg = this.#messageGenerator({
 			eventCode,
@@ -58,7 +57,7 @@ export class CollectEvent {
 		eventCode: string,
 		properties: AnyObject = {},
 		eventType: string = Config.eventType.ACTION,
-		trackType: string = '2'
+		trackType = '2'
 	) {
 		const msg = this.#messageGenerator({
 			eventCode,

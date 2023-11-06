@@ -6,6 +6,4 @@
  * @LastEditTime: 2023-09-08 17:52:28
  */
 
-export default class PerformanceProperties {
- 
-}
+export default class PerformanceProperties {}

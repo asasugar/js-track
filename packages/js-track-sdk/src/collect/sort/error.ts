@@ -3,10 +3,10 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-09-07 13:39:35
+ * @LastEditTime: 2023-11-06 11:30:22
  */
-import Config from '@js-track/config';
-import { ErrorProperties } from '@js-track/message';
+import Config from '@/config';
+import { ErrorProperties } from '@/message';
 import collectService from '../event';
 import appCollect from './app';
 

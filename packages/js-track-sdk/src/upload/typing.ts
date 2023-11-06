@@ -1,5 +1,28 @@
-
+// 根据接口定义调整声明
 export interface UploadParams {
-  appKey: string;
-  data: string;
+	data: string;
+}
+
+export interface HttpRes {
+	code: 0 | 1;
+	msg: string;
+	status: string;
+	data: string | null;
+}
+export interface SocketRes {
+	batch: boolean;
+	code: -1 | 0;
+	data: string;
+	msg: string;
+	eventTime?: number;
+	index?: number;
+}
+
+export interface SocketRes {
+	batch: boolean;
+	code: -1 | 0;
+	data: string;
+	msg: string;
+	eventTime?: number;
+	index?: number;
 }
