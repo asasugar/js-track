@@ -1,0 +1,78 @@
+{
+  "author": "Xiongjie.Xue",
+  "name": "@js-track/sdk",
+  "miniprogram": "dist",
+  "version": "1.0.0",
+  "description": "js-track sdk",
+  "type": "module",
+  "files": [
+    "dist",
+    "tsconfig.json"
+  ],
+  "exports": {
+    "./mp-uni": {
+      "import": "./dist/mp-uni/index.es.js",
+      "require": "./dist/mp-uni/index.cjs.js",
+      "types": "./dist/types/mp-uni.d.ts",
+      "default": "./dist/mp-uni/index.es.js"
+    },
+    "./mp-uni-vue2": {
+      "import": "./dist/mp-uni-vue2/index.es.js",
+      "require": "./dist/mp-uni-vue2/index.cjs.js",
+      "types": "./dist/types/mp-uni-vue2.d.ts",
+      "default": "./dist/mp-uni-vue2/index.es.js"
+    },
+    "./mp-weixin": {
+      "import": "./dist/mp-weixin/index.es.js",
+      "require": "./dist/mp-weixin/index.cjs.js",
+      "types": "./dist/types/mp-weixin.d.ts",
+      "default": "./dist/mp-weixin/index.es.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/types/*",
+        "./"
+      ]
+    }
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "watch": "vite build --watch && tsup --dts-only",
+    "build": "vite build && tsup --dts-only",
+    "analyzer": "vite build --mode analyzer && tsup --dts-only"
+  },
+  "keywords": [
+    "js-track",
+    "lunikTrack",
+    "js-track-sdk",
+    "@js-track/sdk",
+    "@js-track/sdk/mp-uni",
+    "@js-track/sdk/mp-uni-vue2",
+    "@js-track/sdk/mp-weixin"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@js-track/platform-api": "workspace:^",
+    "@js-track/shared": "workspace:^",
+    "js-base64": "^3.7.5",
+    "js-sha1": "^0.6.0",
+    "pako": "^2.1.0"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "^3.4.1",
+    "@js-track/types": "workspace:^",
+    "@js-track/tsconfig": "workspace:^",
+    "@types/js-sha1": "^0.6.1",
+    "@types/node": "^18.18.7",
+    "@types/pako": "^2.0.2",
+    "miniprogram-api-typings": "^3.12.1",
+    "rimraf": "^5.0.5",
+    "rollup-plugin-visualizer": "^5.9.2",
+    "tsup": "^7.2.0",
+    "typescript": "^4.9.5",
+    "vite": "^3.2.7",
+    "vite-plugin-compression": "^0.5.1"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "extends": "@js-track/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+  },
+  "include": ["*.d.ts"]
+}

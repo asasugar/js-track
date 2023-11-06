@@ -1,0 +1,43 @@
+{
+  "author": "Xiongjie.Xue",
+  "name": "@js-track/shared",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "pnpm clean && tsup"
+  },
+  "exports": {
+    "./utils": {
+      "import": "./dist/utils.mjs",
+      "require": "./dist/utils.js",
+      "types": "./dist/utils.d.ts",
+      "default": "./dist/utils.mjs"
+    },
+    "./configs/*.json": "./configs/*.json"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./*"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "configs",
+    "package.json"
+  ],
+  "keywords": [
+    "shared",
+    "utils",
+    "tsconfig"
+  ],
+  "license": "ISC",
+  "devDependencies": {
+    "rimraf": "^5.0.5",
+    "tsup": "^7.2.0",
+    "@js-track/tsconfig": "workspace:^"
+  }
+}

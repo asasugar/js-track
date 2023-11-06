@@ -1,0 +1,23 @@
+{
+  "extends": "@js-track/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declarationDir": "dist/types",
+    "types": [
+      "vite/client",
+      "@dcloudio/types",
+      "miniprogram-api-typings",
+      "@types/node",
+      "@js-track/types"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts"
+  ]
+}

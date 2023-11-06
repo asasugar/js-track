@@ -1,0 +1,28 @@
+{
+  "author": "Xiongjie.Xue",
+  "name": "@js-track/platform-api",
+  "version": "1.0.3",
+  "description": "js-track platform-api",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "pnpm clean && tsup"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "typings": "./dist/index.d.ts",
+  "keywords": [
+    "platform-api",
+    "uiclient",
+    "uni",
+    "wx"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@js-track/shared": "workspace:^",
+    "@js-track/types": "workspace:^"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5",
+    "tsup": "^7.2.0"
+  }
+}

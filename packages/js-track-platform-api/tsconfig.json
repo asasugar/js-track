@@ -1,0 +1,12 @@
+{
+  "extends": "@js-track/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": [
+      "@js-track/types",
+    ],
+  },
+  "include": [
+    "index.ts"
+  ],
+}

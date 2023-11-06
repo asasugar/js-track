@@ -1,0 +1,27 @@
+{
+  "name": "@js-track/collect",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@js-track/config": "workspace:^",
+    "@js-track/constant": "workspace:^",
+    "@js-track/foundation": "workspace:^",
+    "@js-track/message": "workspace:^",
+    "@js-track/upload": "workspace:^",
+    "@js-track/utils": "workspace:^"
+  }
+}

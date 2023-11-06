@@ -1,0 +1,22 @@
+{
+  "name": "@js-track/foundation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "exports": {
+    ".": {
+      "import": "./index.ts"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@js-track/uiclient": "workspace:^",
+    "@js-track/upload": "workspace:^",
+    "@js-track/utils": "workspace:^"
+  }
+}

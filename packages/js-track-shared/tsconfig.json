@@ -1,0 +1,7 @@
+{
+  "extends": "@js-track/tsconfig",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "include": ["**/*.ts"]
+}

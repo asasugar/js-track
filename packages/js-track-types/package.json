@@ -1,0 +1,23 @@
+{
+  "author": "Xiongjie.Xue",
+  "name": "@js-track/types",
+  "version": "1.0.0",
+  "description": "js-track types",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "pnpm clean && tsup"
+  },
+  "typings": "index.d.ts",
+  "keywords": [
+    "types",
+    "js-track-types",
+    "@js-track/types"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@dcloudio/types": "^3.4.1",
+    "@js-track/tsconfig": "workspace:^",
+    "@types/node": "^18.18.7",
+    "miniprogram-api-typings": "^3.12.1"
+  }
+}
