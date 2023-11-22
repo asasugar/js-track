@@ -5,28 +5,37 @@
   "version": "1.0.0",
   "description": "js-track sdk",
   "type": "module",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "watch": "vite build --watch && tsup --dts-only",
+    "build:mp-uni": "cross-env CLIENT=mp-uni vite build",
+    "build:mp-uni-vue2": "cross-env CLIENT=mp-uni-vue2 vite build",
+    "build:mp-weixin": "cross-env CLIENT=mp-weixin vite build",
+    "build": "pnpm build:mp-uni && pnpm build:mp-uni-vue2 && pnpm build:mp-weixin && tsup --dts-only",
+    "analyzer": "vite build --mode analyzer && tsup --dts-only"
+  },
   "files": [
     "dist",
     "tsconfig.json"
   ],
   "exports": {
     "./mp-uni": {
-      "import": "./dist/mp-uni/index.es.js",
-      "require": "./dist/mp-uni/index.cjs.js",
+      "import": "./dist/mp-uni/mp-uni.es.js",
+      "require": "./dist/mp-uni/mp-uni.umd.js",
       "types": "./dist/types/mp-uni.d.ts",
-      "default": "./dist/mp-uni/index.es.js"
+      "default": "./dist/mp-uni/mp-uni.es.js"
     },
     "./mp-uni-vue2": {
-      "import": "./dist/mp-uni-vue2/index.es.js",
-      "require": "./dist/mp-uni-vue2/index.cjs.js",
+      "import": "./dist/mp-uni-vue2/mp-uni-vue2.es.js",
+      "require": "./dist/mp-uni-vue2/mp-uni-vue2.umd.js",
       "types": "./dist/types/mp-uni-vue2.d.ts",
-      "default": "./dist/mp-uni-vue2/index.es.js"
+      "default": "./dist/mp-uni-vue2/mp-uni-vue2.es.js"
     },
     "./mp-weixin": {
-      "import": "./dist/mp-weixin/index.es.js",
-      "require": "./dist/mp-weixin/index.cjs.js",
+      "import": "./dist/mp-weixin/mp-weixin.es.js",
+      "require": "./dist/mp-weixin/mp-weixin.umd.js",
       "types": "./dist/types/mp-weixin.d.ts",
-      "default": "./dist/mp-weixin/index.es.js"
+      "default": "./dist/mp-weixin/mp-weixin.es.js"
     }
   },
   "typesVersions": {
@@ -36,12 +45,6 @@
         "./"
       ]
     }
-  },
-  "scripts": {
-    "clean": "rimraf ./dist",
-    "watch": "vite build --watch && tsup --dts-only",
-    "build": "vite build && tsup --dts-only",
-    "analyzer": "vite build --mode analyzer && tsup --dts-only"
   },
   "keywords": [
     "js-track",
@@ -61,17 +64,19 @@
   },
   "devDependencies": {
     "@dcloudio/types": "^3.4.1",
-    "@js-track/types": "workspace:^",
     "@js-track/tsconfig": "workspace:^",
+    "@js-track/types": "workspace:^",
     "@types/js-sha1": "^0.6.1",
     "@types/node": "^18.18.7",
     "@types/pako": "^2.0.2",
+    "cross-env": "^7.0.3",
     "miniprogram-api-typings": "^3.12.1",
     "rimraf": "^5.0.5",
     "rollup-plugin-visualizer": "^5.9.2",
     "tsup": "^7.2.0",
     "typescript": "^4.9.5",
     "vite": "^3.2.7",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-progress": "^0.0.7"
   }
 }

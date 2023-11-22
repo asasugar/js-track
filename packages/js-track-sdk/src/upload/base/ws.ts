@@ -1,23 +1,40 @@
-import Config from '@/config';
+import SDKConfig from '@/config';
 import logger from '@/foundation/logger';
 import uiClient from '@js-track/platform-api';
 import type { UploadParams } from '../typing';
 
 const HEALTHCHECK_MAXCOUNT = 3;
-const HEALTHTIME = 10;
+const HEALTHTIME = 10 * 1000;
+const RECONNECT_INTERVAL = 5 * 1000;
 const SOCKETTASK_ERROR_MAXCOUNT = 3;
 
 class Socket {
 	socketTask: UniApp.SocketTask | WechatMiniprogram.SocketTask | undefined; // socketTask对象
 	sendMessageTimestamp: number = new Date().getTime(); // 客户端发送消息的时间戳
-	timerId: Timer;
-	socketTaskErrorCount: number = SOCKETTASK_ERROR_MAXCOUNT; // onError次数
-	healthTime: number = HEALTHTIME * 1000; // 心跳频率（避免被nginx自动断开）
+	timerId: Timer = null;
+	socketTaskErrorCount = 0; // onError次数
+	socketTaskErrorReconnectTime: number = RECONNECT_INTERVAL; // 重连间隔时间
+	healthTime: number = HEALTHTIME; // 心跳频率（避免被nginx自动断开）
 	healthCheckRetryCount: number = HEALTHCHECK_MAXCOUNT; // 心跳检测重试次数
 	insertCb: Function | null = null; // 单条请求接口回调
 	batchInsertCb: Function | null = null; // 批量请求接口回调
 
-	init() {
+	/**
+	 * 是否可以使用ws上报
+	 */
+	canIUseWS() {
+		const { request_type } = SDKConfig.config;
+		console.log(
+			'=========>canIUseWs',
+			request_type === 'ws' && this.socketTask?.readyState === 1,
+			request_type,
+			this.socketTask
+		);
+		return request_type === 'ws' && this.socketTask?.readyState === 1;
+	}
+
+	async init() {
+		this.close();
 		this.connect();
 		this.emit();
 	}
@@ -25,7 +42,7 @@ class Socket {
 	 * 连接ws
 	 */
 	connect() {
-		const { wsDomain } = Config.config;
+		const { wsDomain } = SDKConfig.config;
 
 		if (!wsDomain) {
 			throw new Error('domain is empty');
@@ -73,13 +90,22 @@ class Socket {
 
 		// 监听 WebSocket 错误事件
 		this.socketTask.onError(errMsg => {
-			logger.info('埋点ws错误：', errMsg);
-			this.socketTaskErrorCount--;
-			this._stopHeartbeat();
-			// 尝试重新连接
-			if (this.socketTaskErrorCount >= 0) {
-				this.connect();
+			console.log('埋点ws错误：', errMsg);
+			// 小程序socket触发错误事件之后，就会主动触发onClose事件
+			if (this.socketTaskErrorCount >= SOCKETTASK_ERROR_MAXCOUNT) {
+				console.log('埋点ws重连次数已达上限，将自动断开连接！');
+				this.close();
+				return;
 			}
+			// 重连机制间隔时间为5s * 2的N次方
+			const t = setTimeout(async () => {
+				this.socketTaskErrorCount++;
+				this._stopHeartbeat();
+				// 尝试重新连接
+				await this.init();
+				console.log(`埋点ws尝试重新连接,第${this.socketTaskErrorCount}次`);
+				clearTimeout(t);
+			}, this.socketTaskErrorReconnectTime * 2 ** this.socketTaskErrorCount);
 		});
 	}
 
@@ -137,19 +163,22 @@ class Socket {
 					// 心跳检测发送成功,重置检测次数
 					this.healthCheckRetryCount = HEALTHCHECK_MAXCOUNT;
 				},
-				fail: () => {
+				fail: async err => {
 					// 心跳检测发送失败，次数-1
 					this.healthCheckRetryCount--;
+					logger.info('埋点ws心跳检测次数发送失败，检测次数:', this.healthCheckRetryCount, err);
 					// 心跳次数剩余0时，重新连接一次
 					if (this.healthCheckRetryCount === 0 && this.timerId) {
-						this.connect();
+						await this.init();
 					} else if (this.healthCheckRetryCount < 0) {
 						// 重连一次失败则关闭ws
-						this._stopHeartbeat();
 						this.close();
 					} else {
 						this._startHeartbeat();
 					}
+				},
+				complete: () => {
+					this._startHeartbeat();
 				}
 			});
 		}, this.healthTime);

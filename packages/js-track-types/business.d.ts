@@ -1,7 +1,7 @@
 declare namespace JTBusiness {
 	type Env = 'prod' | 'pre' | 'test03' | 'test04';
 
-	type Client = 'my' | 'wx' | 'tt' | 'uni';
+	type Client = 'weixin' | 'uni';
 
 	type SdkType = 'android' | 'ios' | 'weixinmini' | 'web' | 'alipaymini' | 'tiktokmini';
 
@@ -10,6 +10,7 @@ declare namespace JTBusiness {
 		wsDomain?: string;
 		client: Client;
 		apiEnv: Env;
+		request_type?: 'ws' | 'http';
 		appName: string;
 		sdkType: SdkType;
 		sdkVersion: string;

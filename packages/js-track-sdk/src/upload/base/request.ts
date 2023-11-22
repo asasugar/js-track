@@ -5,25 +5,32 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-11-06 14:36:29
+ * @LastEditTime: 2023-11-22 15:55:15
  */
 
 import Config from '@/config';
 import logger from '@/foundation/logger';
 import uiClient from '@js-track/platform-api';
 import { isFunction } from '@js-track/shared/utils';
-import type { UploadParams } from '../typing';
+import type { HttpRes, UploadHeaders, UploadParams } from '../typing';
+import localService from './local';
+export class Request {
+	/**
+	 * 设置http请求头
+	 * @param {Object} commonData
+	 */
+	getHeader() {
+		const header: UploadHeaders = {
+			'content-type': 'application/x-www-form-urlencoded'
+		};
 
-export class RequestCore {
+		return header;
+	}
 	/**
 	 * 系统request
 	 * @param {Object} config
 	 */
-	async mini(
-		config:
-			| UniApp.RequestOptions
-			| WechatMiniprogram.RequestOption<string | WechatMiniprogram.IAnyObject | ArrayBuffer>
-	) {
+	async mini(config: UniApp.RequestOptions) {
 		if (!uiClient.request || !isFunction(uiClient.request)) {
 			throw new Error('uiclient.request is empty');
 		}
@@ -38,16 +45,16 @@ export class RequestCore {
 			...header
 		};
 		try {
-			const response = await uiClient.request({
+			const response = (await uiClient.request({
 				url,
 				method,
 				data,
 				// 微信
 				header,
 				// 支付宝
-				// headers: header,
+				...(<my.RequestOption['headers']>{ headers: header }),
 				dataType
-			});
+			})) as UniApp.RequestSuccessCallbackResult;
 			logger.info('埋点请求链接:', url, '参数:', data, '返回值:', response);
 
 			return response;
@@ -58,48 +65,65 @@ export class RequestCore {
 
 	/**
 	 * 单个数据上传
-	 * @param {Object} data
-	 * @param {Object} headers
+	 * @param {Object} data 请求参数
+	 * @param {Object} options 扩展参数
 	 */
-	async insert(data: UploadParams, header: AnyObject) {
+	async insert(data: UploadParams, options?: AnyObject) {
 		const { domain } = Config.config;
-
+		console.log(options);
 		if (!domain) {
 			throw new Error('domain is empty');
 		}
+		const header = this.getHeader();
 
 		const url = '/xxx/track/Insert';
-		// logger.info('单个埋点插入请求头:', header);
-		const content = await this.mini({
+		const res = await this.mini({
 			url: domain + url,
 			data,
 			header
 		});
-		return content;
+		const { code } = (res?.data || {}) as HttpRes;
+
+		logger.info(
+			`monitor REAL TIME upload ${code === 1 ? 'success' : 'fail'}`,
+			data,
+			'request_type: http'
+		);
 	}
 
 	/**
 	 * 批量上传
-	 * @param {Object} data
-	 * @param {Object} headers
+	 * @param {Object} data 请求参数
+	 * @param {Object} options 扩展参数
 	 */
-	async batchInsert(data: UploadParams, header: AnyObject) {
+	async batchInsert(data: UploadParams, options: AnyObject) {
+		const { jsonArray, index } = options;
+
 		const { domain } = Config.config;
+		console.log(options);
 
 		if (!domain) {
 			throw new Error('domain is empty');
 		}
+		const header = this.getHeader();
 
 		const url = '/xxxx/track/batchInsert';
-		// logger.info('批量埋点插入请求头:', header);
 
-		const content = await this.mini({
+		const res = await this.mini({
 			url: domain + url,
 			data,
 			header
 		});
-		return content;
+		const { code } = (res?.data || {}) as HttpRes;
+		if (code === 1) {
+			// 上传成功后，清空storage
+			localService.clearUploadErrorToLocal(index);
+		} else {
+			// 上传失败后，回写storage
+			localService.resetUploadErrorToLocal(JSON.stringify(jsonArray), index);
+		}
+		logger.info(`monitor upload ${code === 1 ? 'success' : 'fail'}`, 'request_type: http');
 	}
 }
 
-export default new RequestCore();
+export default new Request();

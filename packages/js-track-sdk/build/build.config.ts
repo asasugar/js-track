@@ -1,28 +1,22 @@
-import { BuildOptions } from 'vite';
+import type { BuildOptions } from 'vite';
 import pkg from '../package.json';
-export default function getBuildConfig(): BuildOptions {
+import { getClient } from './utils';
+
+export default function getBuildConfig(mode: string): BuildOptions {
+	const client = getClient(mode);
 	return {
+		outDir: `dist/${client}`,
 		lib: {
-			entry: {
-				'mp-uni/index': './src/entry/mp-uni.ts',
-				'mp-uni-vue2/index': './src/entry/mp-uni-vue2.ts',
-				'mp-weixin/index': './src/entry/mp-weixin.ts'
-			},
+			entry: `./src/entry/${client}.ts`,
 			name: pkg.name,
 			// the proper extensions will be added
-			fileName: (formast, entryName) => `${entryName}.${formast}.js`
+			fileName: (formast, entryName) => `${entryName}.${formast}.js`,
+			formats: ['es', 'umd']
 		},
 		rollupOptions: {
 			output: {
-				// disable warning on packages/index.ts using both default and named expor
-				exports: 'named',
-				manualChunks: id => {
-					if (id.includes('node_modules')) {
-						return 'vendor';
-					} else {
-						return 'common';
-					}
-				}
+				// disable warning on packages/index.ts using both default and named export
+				exports: 'named'
 			}
 		}
 	};

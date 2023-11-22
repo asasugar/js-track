@@ -1,4 +1,4 @@
-import { UserConfig } from 'vite';
+import type { UserConfig } from 'vite';
 import { pathResolve } from './utils';
 
 export default function getBaseConfig() {

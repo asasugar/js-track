@@ -118,6 +118,9 @@ importers:
       '@types/pako':
         specifier: ^2.0.2
         version: 2.0.2
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       miniprogram-api-typings:
         specifier: ^3.12.1
         version: 3.12.1
@@ -139,6 +142,9 @@ importers:
       vite-plugin-compression:
         specifier: ^0.5.1
         version: 0.5.1(vite@3.2.7)
+      vite-plugin-progress:
+        specifier: ^0.0.7
+        version: 0.0.7(vite@3.2.7)
 
   packages/js-track-shared:
     devDependencies:
@@ -178,6 +184,9 @@ importers:
       '@dcloudio/types':
         specifier: ^3.4.1
         version: 3.4.3
+      '@mini-types/alipay':
+        specifier: ^3.0.12
+        version: 3.0.12
       '@types/node':
         specifier: ^18.18.7
         version: 18.18.8
@@ -963,6 +972,21 @@ packages:
       read-yaml-file: 1.1.0
     dev: true
 
+  /@mini-types/alipay@3.0.12:
+    resolution: {integrity: sha512-XC2bxv7JdoXBOhkwcDnJnXA9vWzSRrqnyliE2wgddIsoSNlwc0g8+PyvRdw+X2RhbumnyXWF/VBQK+hlzhDsxg==}
+    dependencies:
+      '@mini-types/global': 3.0.12
+      '@mini-types/my': 3.0.12
+    dev: false
+
+  /@mini-types/global@3.0.12:
+    resolution: {integrity: sha512-3JlOpG5RdV/HBeZOJGd/lfHUoXZ0mre6PafSmXWWVZUen+oRbFRWcNf1d3Bg3KO1Vp0PtuYN/AG9eaa3Z2JXEg==}
+    dev: false
+
+  /@mini-types/my@3.0.12:
+    resolution: {integrity: sha512-mlABG8a8y63uaq6HPWK2xBEyED3sRFvJBnEzvM6u0eHpDxMWPs+WkKehUE1NXUYjTmVGee1k/qCFM4W0hjKzNw==}
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -1019,6 +1043,10 @@ packages:
 
   /@types/minimist@1.2.4:
     resolution: {integrity: sha512-Kfe/D3hxHTusnPNRbycJE1N77WHDsdS4AjUYIzlDzhDrS47NrwuL3YW4VITxwR7KCVpzwgy4Rbj829KSSQmwXQ==}
+    dev: true
+
+  /@types/node@10.17.60:
+    resolution: {integrity: sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==}
     dev: true
 
   /@types/node@12.20.55:
@@ -2260,6 +2288,14 @@ packages:
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
+    dev: true
+
+  /cross-env@7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-spawn@5.1.0:
@@ -5363,6 +5399,11 @@ packages:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
     dev: true
 
+  /progress@2.0.3:
+    resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
+    engines: {node: '>=0.4.0'}
+    dev: true
+
   /pseudomap@1.0.2:
     resolution: {integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==}
     dev: true
@@ -5397,6 +5438,12 @@ packages:
   /quick-lru@4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
+    dev: true
+
+  /rd@2.0.1:
+    resolution: {integrity: sha512-/XdKU4UazUZTXFmI0dpABt8jSXPWcEyaGdk340KdHnsEOdkTctlX23aAK7ChQDn39YGNlAJr1M5uvaKt4QnpNw==}
+    dependencies:
+      '@types/node': 10.17.60
     dev: true
 
   /read-pkg-up@1.0.1:
@@ -6701,6 +6748,18 @@ packages:
       vite: 3.2.7(@types/node@18.18.8)
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /vite-plugin-progress@0.0.7(vite@3.2.7):
+    resolution: {integrity: sha512-zyvKdcc/X+6hnw3J1HVV1TKrlFKC4Rh8GnDnWG/2qhRXjqytTcM++xZ+SAPnoDsSyWl8O93ymK0wZRgHAoglEQ==}
+    engines: {node: '>=14', pnpm: '>=7.0.0'}
+    peerDependencies:
+      vite: '>2.0.0-0'
+    dependencies:
+      picocolors: 1.0.0
+      progress: 2.0.3
+      rd: 2.0.1
+      vite: 3.2.7(@types/node@18.18.8)
     dev: true
 
   /vite@3.2.7(@types/node@18.18.8):

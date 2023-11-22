@@ -1,4 +1,4 @@
-import { ServerOptions } from 'vite';
+import type { ServerOptions } from 'vite';
 
 export default function getServerConfig(): ServerOptions {
 	return {

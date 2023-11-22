@@ -15,6 +15,7 @@
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
  * @LastEditTime: 2022-11-22 17:13:40
  */
+import uiClient from '@js-track/platform-api';
 import { aop } from '@js-track/shared/utils';
 import { PageCollect } from './common';
 
@@ -72,6 +73,38 @@ class WXPageCollect extends PageCollect {
 				});
 			}
 		});
+	}
+	/**
+	 * 组件自动上报
+	 * @param {*} component
+	 */
+	componentAutoCollect(component: any) {
+		component = component.__proto__;
+		if (!component || component?.aopFlag) return; // 避免未销毁的组件多次触发aop
+		const componentAttrs = Object.keys(component);
+		componentAttrs.forEach(methodName => {
+			if (
+				typeof component[methodName] === 'function' &&
+				this.presetFunction.indexOf(methodName) < 0
+			) {
+				component[methodName] = aop.before(component[methodName], (...args: IEvent[]) => {
+					console.log('component aop start', methodName, 'args:', args);
+					if (this.isAutoCollectEvent(args[0])) {
+						let componentId = component.is;
+						if (componentId.indexOf('/') >= 0) {
+							const isSplit = componentId.split('/');
+							componentId = isSplit[isSplit.length - 1];
+						}
+						const viewId = this.getViewId(args[0]); // 当前控件Id
+						if (!viewId) return;
+						const code = `${uiClient.getTopPageName()}#${componentId}#${viewId}#${args[0].type}`;
+
+						this.aopHandle(viewId, args[0], code);
+					}
+				});
+			}
+		});
+		component.aopFlag = true;
 	}
 }
 

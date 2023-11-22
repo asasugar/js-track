@@ -32,38 +32,43 @@ export class UIClient {
 		this.client = UIClient.CLIENT(type);
 	}
 
-	request(
-		params: UniApp.RequestOptions | WechatMiniprogram.RequestOption
-	): Promise<UniApp.GeneralCallbackResult | WechatMiniprogram.RequestSuccessCallback> {
+	request<T extends string | AnyObject | ArrayBuffer = string | AnyObject | ArrayBuffer>(
+		params: UniApp.RequestOptions | WechatMiniprogram.RequestOption | my.RequestOption
+	): Promise<
+		| UniApp.GeneralCallbackResult
+		| WechatMiniprogram.RequestSuccessCallbackResult<T>
+		| my.RequestSuccessCallbackResult
+	> {
 		return new Promise((resolve, reject) => {
 			if (!params) return reject(new Error('params is empty'));
 
 			if (!isFunction(params.success)) {
 				params.success = function (
 					content:
-						| WechatMiniprogram.RequestSuccessCallback<
-								string | WechatMiniprogram.IAnyObject | ArrayBuffer
-						  >
 						| UniApp.GeneralCallbackResult
-						| PromiseLike<
-								| WechatMiniprogram.RequestSuccessCallback<
-										string | WechatMiniprogram.IAnyObject | ArrayBuffer
-								  >
-								| UniApp.GeneralCallbackResult
-						  >
+						| WechatMiniprogram.RequestSuccessCallbackResult<T>
+						| my.RequestSuccessCallbackResult
 				) {
 					resolve(content);
 				};
 			}
 			if (!isFunction(params.fail)) {
 				params.fail = function (
-					e: UniApp.GeneralCallbackResult | WechatMiniprogram.RequestFailCallback
+					e:
+						| UniApp.GeneralCallbackResult
+						| WechatMiniprogram.RequestFailCallbackErr
+						| my.RequestFailCallbackErr
 				) {
 					reject(e);
 				};
 			}
 			if (!isFunction(params.complete)) {
-				params.complete = function (content) {
+				params.complete = function (
+					content:
+						| UniApp.GeneralCallbackResult
+						| WechatMiniprogram.RequestSuccessCallbackResult<T>
+						| my.RequestSuccessCallbackResult
+				) {
 					resolve(content);
 				};
 			}
@@ -212,7 +217,7 @@ export class UIClient {
 		this.client?.onAppHide(fn);
 	}
 
-	connectSocket(url: string): WechatMiniprogram.SocketTask | UniApp.SocketTask {
+	connectSocket(url: string): UniApp.SocketTask | WechatMiniprogram.SocketTask {
 		return this.client?.connectSocket({
 			url,
 			complete: () => ({})

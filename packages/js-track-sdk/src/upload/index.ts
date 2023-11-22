@@ -7,7 +7,7 @@
  * @Author: Xiongjie.Xue(xxj95719@gmail.com)
  * @Date: 2023-08-22 16:48:50
  * @LastEditors: Xiongjie.Xue(xxj95719@gmail.com)
- * @LastEditTime: 2023-11-06 15:17:41
+ * @LastEditTime: 2023-11-20 18:36:20
  */
 import collectService from '@/collect/event';
 import Config from '@/config';
@@ -15,11 +15,12 @@ import { UPLOAD_ID_JS_TRACK } from '@/constant/localKey';
 import logger from '@/foundation/logger';
 import uiclient from '@js-track/platform-api';
 import { isDef } from '@js-track/shared/utils';
-import { Base64 } from 'js-base64'; // 加密
-import pako from 'pako'; //压缩
 import localService from './base/local';
 import requestService from './base/request';
-import type { UploadParams } from './typing';
+import { gzipEn, ungzipDe } from './base/safe';
+import wsService from './base/ws';
+
+import type { SocketRes, UploadParams } from './typing';
 
 export class Upload {
 	uploadId = 0;
@@ -46,8 +47,12 @@ export class Upload {
 	 * 初始化
 	 * @param {*} config
 	 */
-	init(config: JTBusiness.SdkBaseConfigOptions): void {
-		const { uploadInterval, maxUploadIndex } = config || {};
+	async init(config: JTBusiness.SdkBaseConfigOptions) {
+		const { uploadInterval, maxUploadIndex, request_type } = config || {};
+		if (request_type === 'ws') {
+			// socket初始化
+			await wsService.init();
+		}
 		uploadInterval && (this.interval = uploadInterval);
 		maxUploadIndex && (this.maxUploadIndex = maxUploadIndex);
 
@@ -152,51 +157,63 @@ export class Upload {
 	 * 实时上传数据
 	 */
 	async send(data: JTBusiness.MonitorParmas) {
-		// logger.log('send------- data:', data);
 		data.upload_id = this.getUploadId();
-		// logger.info('send------- upload_id:', data.upload_id);
-		// 有自定义header需求自行补充
-		const header: AnyObject = {};
 
 		const dataStr = JSON.stringify(data);
-		// 数据压缩
-		const zipStr = pako.gzip(dataStr);
-		// 数据加密
-		const msgStrsEn = Base64.fromUint8Array(zipStr);
-		const params: UploadParams = {
-			data: msgStrsEn
-		};
-
-		let res;
+		const msgStrsEn = gzipEn(dataStr);
 		try {
-			res = await requestService.insert(params, header);
+			const params: UploadParams = {
+				data: msgStrsEn
+			};
+			// ws / http
+			if (wsService.canIUseWS()) {
+				// socket请求
+				wsService.insert({
+					params,
+					success: () => {
+						wsService.setInsertCb((result: SocketRes) => {
+							const deMsg = ungzipDe(result.data);
+							if (result.code !== 0) {
+								// 进入临时缓存
+								localService.save(deMsg);
+							}
+							logger.info(
+								`monitor REAL TIME upload ${result.code === 0 ? 'success' : 'fail'}`,
+								JSON.parse(deMsg),
+								'request_type: ws'
+							);
+						});
+					},
+					fail: () => {
+						console.log('埋点ws客户端推送单条消息失败,走http兜底上报', data);
+						// 发送失败后，兜底走http上报
+						requestService.insert(params);
+					}
+				});
+			} else {
+				requestService.insert(params);
+			}
 		} catch (e) {
 			// 进入临时缓存
 			localService.save(dataStr);
-			res = null;
 		}
-		return res;
 	}
 
 	/**
 	 * 批量延迟上传数据
 	 */
 	async sendBatch(data: string, index?: number) {
-		// logger.log('update index send --- ', data, 'index---', index);
 		let jsonArray: JTBusiness.MonitorParmas[] = [];
 		try {
 			jsonArray = JSON.parse(data);
-			// logger.info('update index send --- JSON.parse', jsonArray);
 			jsonArray = jsonArray.map((item: JTBusiness.MonitorParmas) => {
 				if (!item.upload_id) {
 					item.upload_id = this.getUploadId();
 				}
 				return item;
 			});
-			// logger.info('update index send --- jsonArray, getUploadId', jsonArray);
 			// 提取commonData
 			const bothData = this.formatData(jsonArray);
-			// logger.info('update index send --- bothData', bothData);
 			if (!bothData) {
 				if (isDef(index)) {
 					this.uploadFlag[index] = false;
@@ -204,39 +221,47 @@ export class Upload {
 				return;
 			}
 
-			// 数据压缩
-			const zipStr = pako.gzip(bothData);
-			// 数据加密
-
-			const msgStrsEn = Base64.fromUint8Array(zipStr);
-			// logger.info('send  params ---- msgStrsEn', msgStrsEn);
+			// 数据压缩加密
+			const msgStrsEn = gzipEn(bothData);
 
 			const params: UploadParams = {
 				data: msgStrsEn
 			};
-			const header: AnyObject = {};
+			const bothDataJson = JSON.parse(bothData || '{}');
+			const { commonData } = bothDataJson;
 
-			// logger.info('send  params ---- ', params);
-			let res;
-			try {
-				res = await requestService.batchInsert(params, header);
-				const { code } = (res as any)?.data || {};
-				if (code === 1) {
-					// 上传成功后，清空storage
-					localService.clearUploadErrorToLocal(index);
-				} else {
-					// 上传失败后，回写storage
-					localService.resetUploadErrorToLocal(JSON.stringify(jsonArray), index);
-				}
-			} catch (err) {
-				// todo 上传失败后，回写storage
-				logger.error('js-track UPLOAD FAIL', JSON.stringify(err));
-				// 上传失败后，回写storage
-				localService.resetUploadErrorToLocal(JSON.stringify(jsonArray), index);
-				res = null;
+			// ws / http
+			if (wsService.canIUseWS()) {
+				// socket请求
+				wsService.batchInsert({
+					params,
+					index,
+					success: () => {
+						wsService.setBatchInsertCb((result: SocketRes) => {
+							if (result.code === 0) {
+								// 上传成功后，清空storage
+								localService.clearUploadErrorToLocal(result.index);
+							} else {
+								const deMsg = ungzipDe(result.data);
+								// 上传失败后，回写storage
+								localService.resetUploadErrorToLocal(deMsg, result.index);
+							}
+							logger.info(
+								`monitor upload ${result.code == 0 ? 'success' : 'fail'}`,
+								'request_type: ws'
+							);
+						});
+					},
+					fail: () => {
+						console.log('埋点ws客户端推送批量消息失败,走http兜底上报');
+						// 发送失败后，兜底走http上报
+						requestService.batchInsert(params, { commonData, jsonArray, index });
+					}
+				});
+			} else {
+				requestService.batchInsert(params, { commonData, jsonArray, index });
 			}
 		} catch (err) {
-			// todo 缓存错误
 			logger.error('js-track UPLOAD FAIL', JSON.stringify(err));
 			// 上传失败后，回写storage
 			localService.resetUploadErrorToLocal(JSON.stringify(jsonArray), index);

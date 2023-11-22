@@ -17,7 +17,8 @@
   "dependencies": {
     "@dcloudio/types": "^3.4.1",
     "@types/node": "^18.18.7",
-    "miniprogram-api-typings": "^3.12.1"
+    "miniprogram-api-typings": "^3.12.1",
+    "@mini-types/alipay": "^3.0.12"
   },
   "devDependencies": {
     "@js-track/tsconfig": "workspace:^"
